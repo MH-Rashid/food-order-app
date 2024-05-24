@@ -1,15 +1,24 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import { CartContext } from "../store/meal-cart-context";
 import Button from "../UI/Button";
 
 export default function MealItem({ meal }) {
   const { addItem } = useContext(CartContext);
+  const [isAdded, setIsAdded] = useState(false);
+
+  function addMealItem() {
+    addItem(meal);
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 1000);
+  }
 
   return (
     <li className="meal-item">
       <article>
-        <img src={`/${meal.image}`} alt={meal.name} />
+        <img src={`http://localhost:3000/${meal.image}`} alt={meal.name} />
         <div>
           <h3>{meal.name}</h3>
           <p className="meal-item-price">{`$${meal.price}`}</p>
@@ -17,9 +26,9 @@ export default function MealItem({ meal }) {
         </div>
         <p className="meal-item-actions">
           <Button
-            styling="orange-button"
-            clickFn={() => addItem(meal)}
-            btnText="Add to Cart"
+            styling={isAdded ? "orange-button-clicked" : "orange-button"}
+            clickFn={addMealItem}
+            btnText={isAdded ? "✔ Added" : "Add to Cart"}
           />
         </p>
       </article>
