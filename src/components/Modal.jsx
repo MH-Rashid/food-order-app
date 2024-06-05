@@ -2,13 +2,15 @@ import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 
 import { createPortal } from 'react-dom';
 
-import Cart from "./Cart/Cart";
-import CheckoutForm from "./Cart/CheckoutForm";
-import OrderConfirmation from "./Cart/OrderConfirmation";
+import Cart from "./modalCmps/Cart";
+import CheckoutForm from "./modalCmps/CheckoutForm";
+import OrderConfirmation from "./modalCmps/OrderConfirmation";
+import Orders from "./modalCmps/Orders.jsx";
 
 const Modal = forwardRef(function Modal(props, ref) {
   const [modalState, setModalState] = useState({
     showCart: undefined,
+    showOrders: undefined,
     showForm: undefined,
     showConf: undefined,
   });
@@ -17,20 +19,31 @@ const Modal = forwardRef(function Modal(props, ref) {
 
   useImperativeHandle(ref, () => {
     return {
-      open() {
+      openCart() {
         dialog.current.showModal();
         setModalState({
           showCart: true,
+          showOrders: false,
           showForm: false,
           showConf: false,
         })
       },
+      openOrders() {
+        dialog.current.showModal();
+        setModalState({
+          showCart: false,
+          showOrders: true,
+          showForm: false,
+          showConf: false,
+        })
+      }
     };
   });
 
   function handleCheckOut() {
     setModalState({
       showCart: false,
+      showOrders: false,
       showForm: true,
       showConf: false,
     })
@@ -39,6 +52,7 @@ const Modal = forwardRef(function Modal(props, ref) {
   function handleShowConf() {
     setModalState({
       showCart: false,
+      showOrders: false,
       showForm: false,
       showConf: true,
     })
@@ -56,6 +70,8 @@ const Modal = forwardRef(function Modal(props, ref) {
     modalContent = <Cart onCheckout={handleCheckOut} />
   } else if (modalState.showConf) {
     modalContent = <OrderConfirmation onConfirm={handleReset} />
+  } else if (modalState.showOrders) {
+    modalContent = <Orders />
   }
 
   return createPortal(

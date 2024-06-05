@@ -14,8 +14,12 @@ export default function Header() {
     return totalNumberOfItems + item.quantity
   }, 0);
 
-  function handleShowCart() {
-    modal.current.open();
+  function showCart() {
+    modal.current.openCart();
+  }
+
+  function showOrders() {
+    modal.current.openOrders();
   }
 
   return (
@@ -26,8 +30,13 @@ export default function Header() {
         <h1>ReactFood</h1>
       </div>
       <Button
+        styling='main-header-button'
+        clickFn={showOrders}
+        btnText='Orders'
+      />
+      <Button
         styling="main-header-button"
-        clickFn={handleShowCart}
+        clickFn={showCart}
         btnText={`Cart (${cartQuantity})`}
       />
     </div>

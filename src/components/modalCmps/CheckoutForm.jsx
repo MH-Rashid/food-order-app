@@ -19,6 +19,31 @@ export default function CheckoutForm({ onReset, onShowConf }) {
   );
   const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
 
+  async function createOrder(order) {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("http://localhost:3000/orders", {
+        method: "POST",
+        body: JSON.stringify({ order }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const resData = await response.json();
+
+      if (!response.ok) {
+        throw new Error("Failed to send order. Please try again later.");
+      }
+
+      console.log(resData.message);
+      onShowConf();
+    } catch (error) {
+      setError({ message: error.message });
+    }
+    setIsSubmitting(false);
+  }
+  
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -47,31 +72,6 @@ export default function CheckoutForm({ onReset, onShowConf }) {
         city: data.city,
       },
     };
-
-    async function createOrder(order) {
-      setIsSubmitting(true);
-      try {
-        const response = await fetch("http://localhost:3000/orders", {
-          method: "POST",
-          body: JSON.stringify({ order }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const resData = await response.json();
-
-        if (!response.ok) {
-          throw new Error("Failed to send order. Please try again later.");
-        }
-
-        console.log(resData.message);
-        onShowConf();
-      } catch (error) {
-        setError({ message: error.message });
-      }
-      setIsSubmitting(false);
-    }
 
     createOrder(order);
   }

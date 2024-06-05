@@ -4,7 +4,7 @@ import { CartContext } from "../../store/meal-cart-context";
 import Button from "../../UI/Button";
 
 export default function Cart({ onCheckout }) {
-  const { items, updateItem } = useContext(CartContext);
+  const { items, updateItem, resetCart } = useContext(CartContext);
 
   const totalPrice = items.reduce(
     (accumulator, item) => accumulator + item.price * item.quantity,
@@ -17,7 +17,7 @@ export default function Cart({ onCheckout }) {
   return (
     <div className="cart">
       <h2>Your Cart</h2>
-      {cartQuantity === 0 && <p>No items in cart!</p>}
+      {cartQuantity === 0 && <p>No items in cart</p>}
       {cartQuantity > 0 && (
         <ul>
           {items.map((item) => {
@@ -43,11 +43,18 @@ export default function Cart({ onCheckout }) {
         <div className="modal-actions">
           <Button styling="text-button" btnText="Close" />
           {cartQuantity > 0 && (
-            <Button
-              styling="orange-button"
-              clickFn={onCheckout}
-              btnText="Go to Checkout"
-            />
+            <>
+              <Button
+                styling='text-button'
+                btnText='Reset cart'
+                clickFn={resetCart}
+              />
+              <Button
+                styling="orange-button"
+                clickFn={onCheckout}
+                btnText="Go to Checkout"
+              />
+            </>
           )}
         </div>
       </form>

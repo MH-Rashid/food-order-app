@@ -3,7 +3,7 @@ import CartContextProvider from "./store/meal-cart-context.jsx";
 import Header from "./components/Header";
 import Meals from "./components/Meals";
 import MealItem from "./components/MealItem.jsx";
-import ErrorMessage from "./components/Cart/ErrorMessage.jsx";
+import ErrorMessage from "./components/modalCmps/ErrorMessage.jsx";
 
 import { fetchAvailableMeals } from "./http.js";
 import { useFetch } from "./hooks/useFetch.jsx";

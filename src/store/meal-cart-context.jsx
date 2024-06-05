@@ -31,6 +31,8 @@ function CartReducer(state, action) {
       });
     }
 
+    localStorage.setItem('cart', JSON.stringify(updatedItems));
+
     return {
       items: updatedItems,
     };
@@ -54,12 +56,16 @@ function CartReducer(state, action) {
       updatedItems[updatedItemIndex] = updatedItem;
     }
 
+    localStorage.setItem('cart', JSON.stringify(updatedItems));
+
     return {
       items: updatedItems,
     };
   }
 
   if (action.type === "RESET_CART") {
+    localStorage.setItem('cart', JSON.stringify([]));
+
     return {
       items: [],
     };
@@ -70,7 +76,7 @@ function CartReducer(state, action) {
 
 export default function CartContextProvider({ children }) {
   const [cartState, cartDispatch] = useReducer(CartReducer, {
-    items: [],
+    items: JSON.parse(localStorage.getItem('cart')) || [],
   });
 
   function addItem(item) {
