@@ -24,7 +24,7 @@ export default function CheckoutForm({ onReset, onShowConf }) {
     try {
       const response = await fetch("https://food-order-server-nlvkswcpp-mh-rashids-projects.vercel.app/orders", {
         method: "POST",
-        mode: "cors",
+        mode: "no-cors",
         body: JSON.stringify({ order }),
         headers: {
           "Content-Type": "application/json",

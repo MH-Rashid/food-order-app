@@ -1,7 +1,7 @@
 export async function fetchAvailableMeals() {
   const response = await fetch("https://food-order-server-nlvkswcpp-mh-rashids-projects.vercel.app/meals", {
     method: 'GET',
-    mode: "cors"
+    mode: "no-cors"
   });
   
   if (!response.ok) {
@@ -16,7 +16,7 @@ export async function fetchOrders() {
   try {
     const response = await fetch("https://food-order-server-nlvkswcpp-mh-rashids-projects.vercel.app/orders", {
       method: 'GET',
-      mode: "cors"
+      mode: "no-cors"
     });
 
     // if (!response.ok) {
