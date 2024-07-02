@@ -1,5 +1,5 @@
 export async function fetchAvailableMeals() {
-  const response = await fetch("https://food-order-server-bulabso9b-mh-rashids-projects.vercel.appmeals");
+  const response = await fetch("https://food-order-server-bulabso9b-mh-rashids-projects.vercel.app/meals");
   
   if (!response.ok) {
     throw new Error("Failed to fetch meals. Please try again later");
@@ -11,7 +11,7 @@ export async function fetchAvailableMeals() {
 
 export async function fetchOrders() {
   try {
-    const response = await fetch("https://food-order-server-bulabso9b-mh-rashids-projects.vercel.apporders");
+    const response = await fetch("https://food-order-server-bulabso9b-mh-rashids-projects.vercel.app/orders");
 
     // if (!response.ok) {
     //   throw new Error("Failed to fetch orders. Please try again later");
