@@ -4,6 +4,7 @@ import express from "express";
 import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
+const path = require('node:path');
 const app = express();
 const cors = require("cors");
 
@@ -23,7 +24,8 @@ app.get('/', (req, res) => {
 });
 
 app.get("/meals", async (req, res) => {
-  const meals = await fs.readFile("/data-copy/available-meals.json", "utf8");
+  const pathName = path.resolve('data-copy', 'available-meals.json')
+  const meals = await fs.readFile(pathName, "utf8");
   res.json(JSON.parse(meals));
 });
 
