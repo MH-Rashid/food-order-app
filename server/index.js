@@ -3,8 +3,11 @@ import fs from "node:fs/promises";
 import bodyParser from "body-parser";
 import express from "express";
 
+const express = require("express");
 const app = express();
+const cors = require("cors");
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
