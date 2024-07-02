@@ -1,4 +1,6 @@
 import fs from "node:fs/promises";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 
 import bodyParser from "body-parser";
 import express from "express";
