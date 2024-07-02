@@ -22,7 +22,7 @@ export default function CheckoutForm({ onReset, onShowConf }) {
   async function createOrder(order) {
     setIsSubmitting(true);
     try {
-      const response = await fetch("https://food-order-server-bulabso9b-mh-rashids-projects.vercel.app/orders", {
+      const response = await fetch("https://food-order-server-nlvkswcpp-mh-rashids-projects.vercel.app/orders", {
         method: "POST",
         mode: "cors",
         body: JSON.stringify({ order }),

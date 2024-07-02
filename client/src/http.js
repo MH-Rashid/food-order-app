@@ -1,5 +1,5 @@
 export async function fetchAvailableMeals() {
-  const response = await fetch("https://food-order-server-bulabso9b-mh-rashids-projects.vercel.app/meals", {
+  const response = await fetch("https://food-order-server-nlvkswcpp-mh-rashids-projects.vercel.app/meals", {
     method: 'GET',
     mode: "cors"
   });
@@ -14,7 +14,7 @@ export async function fetchAvailableMeals() {
 
 export async function fetchOrders() {
   try {
-    const response = await fetch("https://food-order-server-bulabso9b-mh-rashids-projects.vercel.app/orders", {
+    const response = await fetch("https://food-order-server-nlvkswcpp-mh-rashids-projects.vercel.app/orders", {
       method: 'GET',
       mode: "cors"
     });
