@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 });
 
 app.get("/meals", async (req, res) => {
-  const pathName = path.resolve('data-copy', 'available-meals.json')
+  const pathName = path.resolve('/data-copy', 'available-meals.json')
   const meals = await fs.readFile(pathName, "utf8");
   res.json(JSON.parse(meals));
 });
