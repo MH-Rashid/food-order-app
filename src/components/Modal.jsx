@@ -2,9 +2,9 @@ import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 
 import { createPortal } from 'react-dom';
 
-import Cart from "./modalCmps/Cart";
-import CheckoutForm from "./modalCmps/CheckoutForm";
-import OrderConfirmation from "./modalCmps/OrderConfirmation";
+import Cart from "./modalCmps/Cart.jsx";
+import CheckoutForm from "./modalCmps/CheckoutForm.jsx";
+import OrderConfirmation from "./modalCmps/OrderConfirmation.jsx";
 import Orders from "./modalCmps/Orders.jsx";
 
 const Modal = forwardRef(function Modal(props, ref) {

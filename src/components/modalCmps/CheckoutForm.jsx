@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
 
-import { CartContext } from "../../store/meal-cart-context";
-import ErrorMessage from "./ErrorMessage";
-import ErrorModal from "../ErrorModal";
-import Button from "../../UI/Button";
-import Input from "../../UI/Input";
+import { CartContext } from "../../store/meal-cart-context.jsx";
+import ErrorMessage from "./ErrorMessage.jsx";
+import ErrorModal from "../ErrorModal.jsx";
+import Button from "../../UI/Button.jsx";
+import Input from "../../UI/Input.jsx";
 
 import { orders } from "../../App.jsx";
 

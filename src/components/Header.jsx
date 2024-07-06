@@ -1,6 +1,6 @@
 import { useRef, useContext } from "react";
 
-import logoImage from "../assets/logo.jpg";
+import logoImage from "/logo.jpg";
 import Modal from "./Modal";
 import Button from "../UI/Button";
 import { CartContext } from "../store/meal-cart-context";
