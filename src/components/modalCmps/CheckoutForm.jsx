@@ -6,6 +6,8 @@ import ErrorModal from "../ErrorModal";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 
+import { orders } from "../../App.jsx";
+
 export default function CheckoutForm({ onReset, onShowConf }) {
   const { items } = useContext(CartContext);
 
@@ -19,32 +21,6 @@ export default function CheckoutForm({ onReset, onShowConf }) {
   );
   const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
 
-  async function createOrder(order) {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("https://food-order-server-nlvkswcpp-mh-rashids-projects.vercel.app/orders", {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ order }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const resData = await response.json();
-
-      if (!response.ok) {
-        throw new Error("Failed to send order. Please try again later.");
-      }
-
-      console.log(resData.message);
-      onShowConf();
-    } catch (error) {
-      setError({ message: error.message });
-    }
-    setIsSubmitting(false);
-  }
-  
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -52,29 +28,38 @@ export default function CheckoutForm({ onReset, onShowConf }) {
     const data = Object.fromEntries(fd.entries());
 
     if (
+      data.email === null ||
+      !data.email.includes("@") ||
+      data.name === null ||
       data.name.trim() === "" ||
+      data.street === null ||
       data.street.trim() === "" ||
+      data.postcode === null ||
       data.postcode.trim() === "" ||
+      data.city === null ||
       data.city.trim() === ""
     ) {
       setInputIsEmpty(true);
-      return;
     } else {
-      setInputIsEmpty(false);
+      setIsSubmitting(true);
+      const order = {
+        items,
+        customer: {
+          name: data.name,
+          email: data.email,
+          street: data.street,
+          ["postal-code"]: data.postcode,
+          city: data.city,
+        },
+        id: (Math.random() * 1000).toString(),
+      };
+  
+      orders.push(order);
+      console.log(orders);
+      localStorage.setItem("orders", JSON.stringify(orders));
+      setIsSubmitting(false);
+      onShowConf();
     }
-
-    const order = {
-      items,
-      customer: {
-        name: data.name,
-        email: data.email,
-        street: data.street,
-        ["postal-code"]: data.postcode,
-        city: data.city,
-      },
-    };
-
-    createOrder(order);
   }
 
   function handleError() {
@@ -105,7 +90,7 @@ export default function CheckoutForm({ onReset, onShowConf }) {
           <Input name="city" labelText="City" type="text" />
         </div>
         {inputIsEmpty && (
-          <p className="control-error">Fields cannot be empty</p>
+          <p className="control-error">Fields cannot be empty or invalid.</p>
         )}
 
         <div className="modal-actions">

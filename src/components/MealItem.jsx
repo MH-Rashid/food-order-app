@@ -18,7 +18,7 @@ export default function MealItem({ meal }) {
   return (
     <li className="meal-item">
       <article>
-        <img src={`https://food-order-server-bulabso9b-mh-rashids-projects.vercel.app/${meal.image}`} alt={meal.name} />
+        <img src={`src/assets/images/${meal.image}`} alt={meal.name} />
         <div>
           <h3>{meal.name}</h3>
           <p className="meal-item-price">{`$${meal.price}`}</p>

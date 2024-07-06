@@ -71,7 +71,7 @@ const Modal = forwardRef(function Modal(props, ref) {
   } else if (modalState.showConf) {
     modalContent = <OrderConfirmation onConfirm={handleReset} />
   } else if (modalState.showOrders) {
-    modalContent = <Orders />
+    modalContent = <Orders onReset={handleReset} />
   }
 
   return createPortal(
