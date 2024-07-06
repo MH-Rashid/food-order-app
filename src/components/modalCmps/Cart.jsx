@@ -21,17 +21,19 @@ export default function Cart({ onCheckout }) {
       {cartQuantity > 0 && (
         <ul>
           {items.map((item) => {
-            const formattedPrice = `$${item.price.toFixed(2)}`;
+            const {id, price, name, quantity} = item;
+            
+            const formattedPrice = `$${price.toFixed(2)}`;
 
             return (
-              <li key={item.id} className="cart-item">
+              <li key={id} className="cart-item">
                 <p>
-                  {item.name} - {item.quantity} x {formattedPrice}
+                  {name} - {quantity} x {formattedPrice}
                 </p>
                 <div className="cart-item-actions">
-                  <Button clickFn={() => updateItem(item.id, -1)} btnText="-" />
-                  <span>{item.quantity}</span>
-                  <Button clickFn={() => updateItem(item.id, 1)} btnText="+" />
+                  <Button clickFn={() => updateItem(id, -1)} btnText="-" />
+                  <span>{quantity}</span>
+                  <Button clickFn={() => updateItem(id, 1)} btnText="+" />
                 </div>
               </li>
             );
