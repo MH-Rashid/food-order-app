@@ -27,18 +27,20 @@ export default function Header() {
       <Modal ref={modal} />
       <div id="title">
         <img src={logoImage} />
-        <h1>ReactFood</h1>
+        <h1>Food order</h1>
       </div>
-      <Button
-        styling='main-header-button'
-        clickFn={showOrders}
-        btnText='Orders'
-      />
-      <Button
-        styling="main-header-button"
-        clickFn={showCart}
-        btnText={`Cart (${cartQuantity})`}
-      />
+      <div className="modal-actions">
+        <Button
+          styling='main-header-button'
+          clickFn={showOrders}
+          btnText='Orders'
+        />
+        <Button
+          styling="main-header-button"
+          clickFn={showCart}
+          btnText={`Cart (${cartQuantity})`}
+        />
+      </div>
     </div>
   );
 }
