@@ -1,9 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const routes = require('./routes/index');
 const path = require("path");
 const cors = require("cors");
-const corsOptions = require("./config/corsOptions");
+const corsOptions = require("./config/corsOptions.js");
 // const { logger } = require("./middleware/logEvents");
 // const errorHandler = require("./middleware/errorHandler");
 // const verifyJWT = require("./middleware/verifyJWT");
@@ -11,7 +12,7 @@ const corsOptions = require("./config/corsOptions");
 // const credentials = require("./middleware/credentials.js");
 const mongoose = require("mongoose");
 const connectDB = require("./dbconfig.js");
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 
 // Connect to MongoDB
 connectDB();
@@ -39,11 +40,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 
 // routes
-// app.use("/", require("./routes/root"));
-// app.use("/register", require("./routes/register"));
-// app.use("/auth", require("./routes/auth"));
-// app.use("/refresh", require("./routes/refresh"));
-// app.use("/logout", require("./routes/logout"));
+app.use('/api', routes);
 
 // app.use(verifyJWT);
 // app.use("/employees", require("./routes/api/employees"));
@@ -53,9 +50,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.all(/^.*$/, (req, res) => {
   res.status(404);
 
-  if (req.accepts("html")) {
-    res.sendFile(path.join(__dirname, "views", "404.html"));
-  } else if (req.accepts("json")) {
+  if (req.accepts("json")) {
     res.json({ error: "404 Not Found" });
   } else {
     res.type("txt").send("404 Not Found");
