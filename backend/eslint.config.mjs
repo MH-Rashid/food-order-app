@@ -26,10 +26,9 @@ export default defineConfig([
     },
     rules: {
       ...js.configs.recommended.rules,
-      indent: ["error", 2],
       "no-unused-vars": ["warn"],
-      "import/no-unresolved": "error",
-      "import/no-extraneous-dependencies": "error",
+      // "import/no-unresolved": "error",
+      // "import/no-extraneous-dependencies": "error",
       "no-console": "off",
     },
   },

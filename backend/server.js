@@ -8,11 +8,11 @@ const corsOptions = require("./config/corsOptions.js");
 // const { logger } = require("./middleware/logEvents");
 // const errorHandler = require("./middleware/errorHandler");
 // const verifyJWT = require("./middleware/verifyJWT");
-// const cookieParser = require("cookie-parser");
 // const credentials = require("./middleware/credentials.js");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const connectDB = require("./dbconfig.js");
-const PORT = process.env.PORT || 3500;
+const PORT = process.env.PORT || 3100;
 
 // Connect to MongoDB
 connectDB();
@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // middleware for cookies
-// app.use(cookieParser());
+app.use(cookieParser());
 
 // built-in middleware to serve static files
 app.use(express.static(path.join(__dirname, "/public")));
