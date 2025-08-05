@@ -1,7 +1,7 @@
 import Button from "../../UI/Button.jsx";
 import OrderItem from "../OrderItem.jsx";
 
-export default function Orders({ onReset }) {
+export default function Orders({ onClose }) {
   const orders = JSON.parse(localStorage.getItem("orders")) || [];
   console.log(orders);
 
@@ -12,7 +12,7 @@ export default function Orders({ onReset }) {
       <>
         <p style={{ color: "black" }}>There are no previous orders</p>
         <div className="modal-actions">
-          <Button styling="orange-button" clickFn={onReset} btnText="Okay" />
+          <Button styling="orange-button" clickFn={onClose} btnText="Okay" />
         </div>
       </>
     );
@@ -29,7 +29,7 @@ export default function Orders({ onReset }) {
       <div className="modal-actions">
         <Button
           styling="text-button"
-          clickFn={onReset}
+          clickFn={onClose}
           btnText="Close"
         />
       </div>

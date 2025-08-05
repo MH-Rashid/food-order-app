@@ -1,5 +1,8 @@
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import CartContextProvider from "./store/meal-cart-context.jsx";
-import meals from './available-meals.json';
+import meals from "./available-meals.json";
 
 import Header from "./components/Header.jsx";
 import Meals from "./components/Meals.jsx";
@@ -9,14 +12,19 @@ export const orders = [];
 
 function App() {
   const availableMeals = JSON.parse(JSON.stringify(meals));
-  
+
   return (
-    <CartContextProvider>
-      <Header />
-      <Meals>
-        {availableMeals.map((meal) => <MealItem key={meal.id} meal={meal} />)}
-      </Meals>
-    </CartContextProvider>
+    <>
+      <CartContextProvider>
+        <Header />
+        <Meals>
+          {availableMeals.map((meal) => (
+            <MealItem key={meal.id} meal={meal} />
+          ))}
+        </Meals>
+      </CartContextProvider>
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+    </>
   );
 }
 

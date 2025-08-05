@@ -8,7 +8,7 @@ import Input from "../../UI/Input.jsx";
 
 import { orders } from "../../App.jsx";
 
-export default function CheckoutForm({ onReset, onShowConf }) {
+export default function CheckoutForm({ onClose, onShowConf }) {
   const { items } = useContext(CartContext);
 
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
@@ -97,7 +97,7 @@ export default function CheckoutForm({ onReset, onShowConf }) {
           <Button
             type="button"
             styling="text-button"
-            clickFn={onReset}
+            clickFn={onClose}
             btnText="Close"
           />
           <Button

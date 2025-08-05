@@ -21,8 +21,8 @@ export default function Cart({ onCheckout }) {
       {cartQuantity > 0 && (
         <ul>
           {items.map((item) => {
-            const {id, price, name, quantity} = item;
-            
+            const { id, price, name, quantity } = item;
+
             const formattedPrice = `$${price.toFixed(2)}`;
 
             return (
@@ -47,8 +47,8 @@ export default function Cart({ onCheckout }) {
           {cartQuantity > 0 && (
             <>
               <Button
-                styling='text-button'
-                btnText='Reset cart'
+                styling="text-button"
+                btnText="Reset cart"
                 clickFn={resetCart}
               />
               <Button

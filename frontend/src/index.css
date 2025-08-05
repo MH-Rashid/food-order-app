@@ -138,20 +138,32 @@ h1 {
   align-self: center;
 }
 
+dialog {
+  background-color: transparent;
+  border: none;
+}
+
 .modal {
   background-color: #e4ddd4;
   border-radius: 6px;
   border: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  padding: 1rem;
-  width: 80%;
-  max-width: 40rem;
+  padding: 2rem;
+  width: 40vw;
+  height: 60vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
   animation: fade-slide-up 0.3s ease-out forwards;
 }
 
-.modal::backdrop {
-  background-color: rgba(0, 0, 0, 0.55);
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.95);
 }
+
+/* .modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.55);
+} */
 
 .modal-actions {
   display: flex;
@@ -168,15 +180,6 @@ h1 {
   animation: slide-down-fade-in 0.3s ease-out forwards;
 }
 
-.error-message {
-  max-width: 40rem;
-  margin: auto;
-  padding: 2rem 5rem;
-  font-size: larger;
-  color: #f80808;
-  background: #f4cdcd;
-}
-
 .error-confirmation {
   font: inherit;
   cursor: pointer;
@@ -185,6 +188,63 @@ h1 {
   border-radius: 4px;
   color: #ffffff;
   padding: 0.5rem 1.5rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 20rem;
+  height: 100%;
+}
+
+.auth-error-message {
+  max-width: 40rem;
+  margin: auto;
+  padding: 1rem;
+  font-size: small;
+  color: #f80808;
+  background: #f4cdcd;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.25rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font: inherit;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auth-btn {
+  font: inherit;
+  cursor: pointer;
+  background-color: #ffc404;
+  border: 1px solid #ffc404;
+  color: #1f1a09;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.auth-btn:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.cart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%
 }
 
 .cart h2 {
