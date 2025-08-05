@@ -1,14 +1,13 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const routes = require('./routes/index');
+const routes = require("./routes/index");
 const path = require("path");
 const cors = require("cors");
 const corsOptions = require("./config/corsOptions.js");
-// const { logger } = require("./middleware/logEvents");
-// const errorHandler = require("./middleware/errorHandler");
-// const verifyJWT = require("./middleware/verifyJWT");
-// const credentials = require("./middleware/credentials.js");
+const logger = require("./middleware/logEvents");
+const errorHandler = require("./middleware/errorHandler");
+const credentials = require("./middleware/credentials.js");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const connectDB = require("./dbconfig.js");
@@ -18,11 +17,10 @@ const PORT = process.env.PORT || 3100;
 connectDB();
 
 // custom middleware logger
-// app.use(logger);
+app.use(logger);
 
-// Handle options credentials check - before CORS!
-// and fetch cookies credentials requirement
-// app.use(credentials);
+// Handle credentials check before CORS
+app.use(credentials);
 
 // Third party middleware to handle CORS
 app.use(cors(corsOptions));
@@ -40,24 +38,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 
 // routes
-app.use('/api', routes);
-
-// app.use(verifyJWT);
-// app.use("/employees", require("./routes/api/employees"));
-// app.use("/users", require("./routes/api/users"));
+app.use("/api", routes);
 
 // Route handler for 404 Not Found
 app.all(/^.*$/, (req, res) => {
-  res.status(404);
-
-  if (req.accepts("json")) {
-    res.json({ error: "404 Not Found" });
-  } else {
-    res.type("txt").send("404 Not Found");
-  }
+  res.sendStatus(404);
 });
 
-// app.use(errorHandler);
+app.use(errorHandler);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");

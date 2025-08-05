@@ -1,4 +1,5 @@
 const express = require("express");
+const verifyJWT = require("../middleware/verifyJWT");
 const registerRoute = require('./register');
 const loginRoute = require('./login');
 const logoutRoute = require('./logout');
@@ -12,7 +13,8 @@ router.use('/register', registerRoute);
 router.use('/login', loginRoute);
 router.use('/logout', logoutRoute);
 router.use('/refresh', refreshRoute);
-router.use('/orders', orderRoutes);
-router.use('/meals', mealRoutes);
+
+router.use('/orders', verifyJWT, orderRoutes);
+router.use('/meals', verifyJWT, mealRoutes);
 
 module.exports = router;
