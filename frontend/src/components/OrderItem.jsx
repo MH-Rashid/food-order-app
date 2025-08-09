@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { CartContext } from "../store/meal-cart-context.jsx";
+import { AppContext } from "../store/meal-cart-context.jsx";
 
 export default function OrderItem({ orderDetails }) {
-  const { addItem } = useContext(CartContext);
+  const { addItem } = useContext(AppContext);
 
   function handleReorder() {
     const { items } = orderDetails;

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { toast } from 'react-toastify';
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { AppContext } from "../../store/meal-cart-context.jsx";
 
-export default function AuthForm({onClose}) {
+export default function AuthForm({ onClose }) {
   const [formType, setFormType] = useState("login");
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ export default function AuthForm({onClose}) {
     password: "",
     confirmPassword: "",
   });
+
+  const { setUser, setMeals } = useContext(AppContext);
 
   useEffect(() => {
     // Reset form data when form type changes
@@ -32,8 +35,6 @@ export default function AuthForm({onClose}) {
     }
   }, [formData.confirmPassword, formData.password, formType]);
 
-  console.log("errorMessage", errorMessage);
-
   const handleSubmit = (event) => {
     if (formType === "login") {
       event.preventDefault();
@@ -44,6 +45,7 @@ export default function AuthForm({onClose}) {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           user: formData.email,
           pwd: formData.password,
@@ -52,14 +54,19 @@ export default function AuthForm({onClose}) {
         .then((response) => response.json())
         .then((data) => {
           if (data.accessToken) {
+            localStorage.setItem("accessToken", data.accessToken)
             toast.success("Login successful. Welcome back!");
+            setUser(formData.email);
+            setMeals();
             onClose();
           } else {
             toast.error("Login failed: " + (data.message || "Unknown error"));
           }
         })
         .catch((error) => {
-          toast.error("An error occurred: " + (error.message || "Unknown error"));
+          toast.error(
+            "An error occurred: " + (error.message || "Unknown error")
+          );
         });
     } else {
       event.preventDefault();
@@ -81,21 +88,27 @@ export default function AuthForm({onClose}) {
             toast.success("Registration successful. Please log in.");
             setFormType("login");
           } else {
-            toast.error("Registration failed: " + (data.message || "Unknown error"));
+            toast.error(
+              "Registration failed: " + (data.message || "Unknown error")
+            );
           }
         })
         .catch((error) => {
-          toast.error("An error occurred: " + (error.message || "Unknown error"));
+          toast.error(
+            "An error occurred: " + (error.message || "Unknown error")
+          );
         });
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="auth-form">
-      <h2 style={{marginTop: 0}}>{formType === "login" ? "Login" : "Register"}</h2>
+      <h2 style={{ marginTop: 0 }}>
+        {formType === "login" ? "Login" : "Register"}
+      </h2>
 
       <div className="form-group">
-        <label htmlFor="email">Your email</label>
+        <label htmlFor="email">Email</label>
         <input
           type="email"
           id="email"
@@ -108,7 +121,7 @@ export default function AuthForm({onClose}) {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="password">Your password</label>
+        <label htmlFor="password">Password</label>
         <input
           type="password"
           id="password"

@@ -26,8 +26,6 @@ const handleLogin = async (req, res) => {
       { expiresIn: "300s" } // 5 mins
     );
 
-    // Also save accessToken on client side, e.g. in localStorage or cookies.
-
     const refreshToken = jwt.sign(
       { username: foundUser.username },
       process.env.REFRESH_TOKEN_SECRET,
@@ -48,6 +46,9 @@ const handleLogin = async (req, res) => {
       path: '/'
     });
     res.json({ accessToken });
+
+    // Also save accessToken on client side, e.g. in localStorage or sessionStorage.
+
   } else {
     res.sendStatus(401);
   }

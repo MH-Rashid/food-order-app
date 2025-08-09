@@ -1,10 +1,10 @@
 import { useContext } from "react";
 
-import { CartContext } from "../../store/meal-cart-context";
+import { AppContext } from "../../store/meal-cart-context";
 import Button from "../../UI/Button";
 
 export default function OrderConfirmation({ onConfirm }) {
-  const { resetCart } = useContext(CartContext);
+  const { resetCart } = useContext(AppContext);
 
   function handleConfirm() {
     resetCart();

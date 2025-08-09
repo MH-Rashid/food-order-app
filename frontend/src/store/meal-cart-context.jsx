@@ -1,13 +1,38 @@
 import { createContext, useReducer } from "react";
+import { fetchAvailableMeals } from "../http.js";
 
-export const CartContext = createContext({
+export const AppContext = createContext({
+  user: {
+    username: "",
+    orders: "",
+  },
   items: [],
+  meals: [],
+  setMeals: () => {},
+  setUser: () => {},
   addItem: () => {},
   updateItem: () => {},
   resetCart: () => {},
 });
 
-function CartReducer(state, action) {
+function AppReducer(state, action) {
+  if (action.type === "SET_USER") {
+    return {
+      ...state,
+      user: {
+        username: action.username,
+        orders: action.orders,
+      },
+    };
+  }
+
+  if (action.type === "SET_MEALS") {
+    return {
+      ...state,
+      meals: action.payload,
+    };
+  }
+
   if (action.type === "ADD_ITEM") {
     const updatedItems = [...state.items];
 
@@ -31,9 +56,10 @@ function CartReducer(state, action) {
       });
     }
 
-    localStorage.setItem('cart', JSON.stringify(updatedItems));
+    localStorage.setItem("cart", JSON.stringify(updatedItems));
 
     return {
+      ...state,
       items: updatedItems,
     };
   }
@@ -56,17 +82,19 @@ function CartReducer(state, action) {
       updatedItems[updatedItemIndex] = updatedItem;
     }
 
-    localStorage.setItem('cart', JSON.stringify(updatedItems));
+    localStorage.setItem("cart", JSON.stringify(updatedItems));
 
     return {
+      ...state,
       items: updatedItems,
     };
   }
 
   if (action.type === "RESET_CART") {
-    localStorage.setItem('cart', JSON.stringify([]));
+    localStorage.setItem("cart", JSON.stringify([]));
 
     return {
+      ...state,
       items: [],
     };
   }
@@ -74,40 +102,67 @@ function CartReducer(state, action) {
   return state;
 }
 
-export default function CartContextProvider({ children }) {
-  const [cartState, cartDispatch] = useReducer(CartReducer, {
-    items: JSON.parse(localStorage.getItem('cart')) || [],
+export default function AppContextProvider({ children }) {
+  const [initialState, dispatch] = useReducer(AppReducer, {
+    user: {
+      username: "",
+      orders: "",
+    },
+    meals: [],
+    items: JSON.parse(localStorage.getItem("cart")) || [],
   });
 
+  function setUser(username, orders) {
+    dispatch({
+      type: "SET_USER",
+      username,
+      orders,
+    });
+  }
+
+  async function setMeals() {
+  try {
+    const meals = await fetchAvailableMeals();
+    dispatch({
+      type: "SET_MEALS",
+      payload: meals,
+    });
+  } catch (err) {
+    console.error("Failed to load meals");
+  }
+}
+
   function addItem(item) {
-    cartDispatch({
+    dispatch({
       type: "ADD_ITEM",
-      item
+      item,
     });
   }
 
   function updateItem(id, amount) {
-    cartDispatch({
+    dispatch({
       type: "UPDATE_ITEM",
       id,
-      amount
+      amount,
     });
   }
 
   function resetCart() {
-    cartDispatch({
+    dispatch({
       type: "RESET_CART",
     });
   }
 
   const ctxValue = {
-    items: cartState.items,
+    user: initialState.user,
+    items: initialState.items,
+    meals: initialState.meals,
+    setMeals,
+    setUser,
     addItem,
     updateItem,
-    resetCart
+    resetCart,
   };
 
-  return (
-    <CartContext.Provider value={ctxValue}>{children}</CartContext.Provider>
-  );
+  return <AppContext.Provider value={ctxValue}>{children}</AppContext.Provider>;
 }

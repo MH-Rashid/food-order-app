@@ -1,7 +1,13 @@
 export async function fetchAvailableMeals() {
-  const response = await fetch("https://localhost:3000/meals", {
+  const accessToken = localStorage.getItem("accessToken");
+
+  const response = await fetch("http://localhost:3100/api/meals", {
     method: "GET",
-    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -9,13 +15,13 @@ export async function fetchAvailableMeals() {
   }
 
   const resData = await response.json();
+
   return resData;
 }
 
 export async function fetchOrders() {
-  const response = await fetch("https://localhost:3000/orders", {
+  const response = await fetch("http://localhost:3100/api/orders", {
     method: "GET",
-    mode: "no-cors",
   });
 
   if (!response.ok) {

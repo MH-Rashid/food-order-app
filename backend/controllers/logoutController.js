@@ -23,7 +23,7 @@ const handleLogout = async (req, res) => {
   console.log(result);
 
   // Remove refreshToken cookie
-  res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true }); // secure: true - only serves on https
+  res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
   res.status(200).json({ message: "User successfully logged out" });
 };
 

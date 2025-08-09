@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 
-import { CartContext } from "../../store/meal-cart-context.jsx";
+import { AppContext } from "../../store/meal-cart-context.jsx";
 import ErrorMessage from "./ErrorMessage.jsx";
 import ErrorModal from "../ErrorModal.jsx";
 import Button from "../../UI/Button.jsx";
@@ -9,7 +9,7 @@ import Input from "../../UI/Input.jsx";
 import { orders } from "../../App.jsx";
 
 export default function CheckoutForm({ onClose, onShowConf }) {
-  const { items } = useContext(CartContext);
+  const { items } = useContext(AppContext);
 
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
   const [error, setError] = useState();

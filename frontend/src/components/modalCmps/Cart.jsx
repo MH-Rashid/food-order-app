@@ -1,10 +1,10 @@
 import { useContext } from "react";
 
-import { CartContext } from "../../store/meal-cart-context";
+import { AppContext } from "../../store/meal-cart-context";
 import Button from "../../UI/Button";
 
 export default function Cart({ onCheckout }) {
-  const { items, updateItem, resetCart } = useContext(CartContext);
+  const { items, updateItem, resetCart } = useContext(AppContext);
 
   const totalPrice = items.reduce(
     (accumulator, item) => accumulator + item.price * item.quantity,

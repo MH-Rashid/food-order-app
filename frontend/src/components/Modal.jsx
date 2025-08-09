@@ -1,14 +1,27 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  useContext,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import Cart from "./modalCmps/Cart.jsx";
 import CheckoutForm from "./modalCmps/CheckoutForm.jsx";
 import OrderConfirmation from "./modalCmps/OrderConfirmation.jsx";
 import Orders from "./modalCmps/Orders.jsx";
 import AuthForm from "./modalCmps/AuthForm.jsx";
+import LogoutConfirmation from "./modalCmps/LogoutConfirmation.jsx";
+import { AppContext } from "../store/meal-cart-context.jsx";
 
 const Modal = forwardRef(function Modal(props, ref) {
+  const { setUser, user } = useContext(AppContext);
+
+  console.log("user:", user)
+
   const [modalState, setModalState] = useState({
     showAuth: true,
+    showLogout: undefined,
     showCart: undefined,
     showOrders: undefined,
     showForm: undefined,
@@ -23,6 +36,7 @@ const Modal = forwardRef(function Modal(props, ref) {
         dialog.current.showModal();
         setModalState({
           showAuth: false,
+          showLogout: false,
           showCart: true,
           showOrders: false,
           showForm: false,
@@ -33,8 +47,20 @@ const Modal = forwardRef(function Modal(props, ref) {
         dialog.current.showModal();
         setModalState({
           showAuth: false,
+          showLogout: false,
           showCart: false,
           showOrders: true,
+          showForm: false,
+          showConf: false,
+        });
+      },
+      openLogout() {
+        dialog.current.showModal();
+        setModalState({
+          showAuth: false,
+          showLogout: true,
+          showCart: false,
+          showOrders: false,
           showForm: false,
           showConf: false,
         });
@@ -42,9 +68,22 @@ const Modal = forwardRef(function Modal(props, ref) {
     };
   });
 
+  function handleLogout() {
+    setUser("")
+    setModalState({
+      showAuth: true,
+      showLogout: false,
+      showCart: false,
+      showOrders: false,
+      showForm: false,
+      showConf: false,
+    });
+  }
+
   function handleCheckOut() {
     setModalState({
       showAuth: false,
+      showLogout: false,
       showCart: false,
       showOrders: false,
       showForm: true,
@@ -55,6 +94,7 @@ const Modal = forwardRef(function Modal(props, ref) {
   function handleShowConf() {
     setModalState({
       showAuth: false,
+      showLogout: false,
       showCart: false,
       showOrders: false,
       showForm: false,
@@ -70,6 +110,10 @@ const Modal = forwardRef(function Modal(props, ref) {
 
   if (modalState.showAuth) {
     modalContent = <AuthForm onClose={handleCloseModal} />;
+  } else if (modalState.showLogout) {
+    modalContent = (
+      <LogoutConfirmation onClose={handleCloseModal} onLogout={handleLogout} />
+    );
   } else if (modalState.showForm) {
     modalContent = (
       <CheckoutForm onClose={handleCloseModal} onShowConf={handleShowConf} />

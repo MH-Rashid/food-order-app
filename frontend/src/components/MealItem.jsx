@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
 
-import { CartContext } from "../store/meal-cart-context";
+import { AppContext } from "../store/meal-cart-context";
 import Button from "../UI/Button";
 
 export default function MealItem({ meal }) {
-  const { addItem } = useContext(CartContext);
+  const { addItem } = useContext(AppContext);
   const [isAdded, setIsAdded] = useState(false);
 
   function addMealItem() {
@@ -18,7 +18,7 @@ export default function MealItem({ meal }) {
   return (
     <li className="meal-item">
       <article>
-        <img src={`./images/${meal.image}`} alt={meal.name} />
+        <img src={meal.image} alt={meal.name} />
         <div>
           <h3>{meal.name}</h3>
           <p className="meal-item-price">{`$${meal.price}`}</p>
