@@ -41,10 +41,9 @@ const deleteOrder = async (req, res) => {
     await order.deleteOne();
     res
       .status(201)
-      .json({ message: `Order with ID ${req.body.id} deleted successfully.` });
+      .json({ ok: true, message: `Order with ID ${req.body.id} deleted successfully.` });
   } catch (err) {
     console.error("Error deleting order:", err);
-    res.status(500).json({ message: "Server error while deleting order." });
   }
 };
 

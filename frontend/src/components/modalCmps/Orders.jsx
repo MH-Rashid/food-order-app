@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchOrders } from "../../http.js";
 import Button from "../../UI/Button.jsx";
+import { toast } from "react-toastify";
 import OrderItem from "../OrderItem.jsx";
 
 export default function Orders({ onClose, onDelete }) {
@@ -11,9 +12,14 @@ export default function Orders({ onClose, onDelete }) {
     async function loadOrders() {
       try {
         const data = await fetchOrders();
-        setOrders(data);
+        if (Array.isArray(data)) {
+          setOrders(data);
+        } else {
+          toast.error(data.message || "No orders found.");
+        }
       } catch (err) {
         console.error("Failed to fetch orders:", err);
+        toast.error('Failed to fetch orders. Please try again later.');
       } finally {
         setLoading(false);
       }

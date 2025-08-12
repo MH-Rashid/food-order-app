@@ -84,14 +84,19 @@ export default function AuthForm({ onClose }) {
               lastname: data.user.lastname,
               username: data.user.username,
             });
-            const meals = await fetchAvailableMeals();
-            setMeals(meals);
-            onClose();
+            const response = await fetchAvailableMeals();
+            if (Array.isArray(response)) {
+              setMeals(response);
+              onClose();
+            } else {
+              toast.error(response.message || "Failed to fetch meals.");
+            }
           } else {
             toast.error("Login failed: " + (data.message || "Unknown error"));
           }
         })
         .catch((error) => {
+          console.error(error)
           toast.error(
             "An error occurred: " + (error.message || "Unknown error")
           );

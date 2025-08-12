@@ -18,6 +18,7 @@ export default function DeleteOrderConfirmation({
       }
     } catch (err) {
       console.error(err);
+      toast.error("An error occurred: " + (err.message || "Unknown error"));
     }
   }
 

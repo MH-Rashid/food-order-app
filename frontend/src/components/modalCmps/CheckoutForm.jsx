@@ -53,13 +53,18 @@ export default function CheckoutForm({ onClose, onShowConf }) {
       };
 
       try {
-        const result = await createOrder(order);
-        console.log("order:", result);
-        toast.success("Order has been placed");
+        const response = await createOrder(order);
+        if (response._id) {
+          toast.success("Order has been placed");
+          onShowConf();
+        } else {
+          toast.error("Failed to place order: " + (response.message || "Unknown error"));
+        }
+      } catch (error) {
+        console.error(error)
+        toast.error("An error occurred: " + (error.message || "Unknown error"));
+      } finally {
         setIsSubmitting(false);
-        onShowConf();
-      } catch (err) {
-        toast.error("An error occurred: " + (error?.message || "Unknown error"));
       }
     }
   }
