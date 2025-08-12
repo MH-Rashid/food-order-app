@@ -1,9 +1,30 @@
+import { useEffect, useState } from "react";
+import { fetchOrders } from "../../http.js";
 import Button from "../../UI/Button.jsx";
 import OrderItem from "../OrderItem.jsx";
 
-export default function Orders({ onClose }) {
-  const orders = JSON.parse(localStorage.getItem("orders")) || [];
-  console.log(orders);
+export default function Orders({ onClose, onDelete }) {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadOrders() {
+      try {
+        const data = await fetchOrders();
+        setOrders(data);
+      } catch (err) {
+        console.error("Failed to fetch orders:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadOrders();
+  }, []);
+
+  if (loading) {
+    return <p>Loading orders...</p>;
+  }
 
   let content;
 
@@ -23,15 +44,15 @@ export default function Orders({ onClose }) {
     <>
       <ul id="orders">
         {orders.map((order) => (
-          <OrderItem key={order.id} orderDetails={order} />
+          <OrderItem
+            key={order._id}
+            orderDetails={order}
+            onDelete={onDelete}
+          />
         ))}
       </ul>
       <div className="modal-actions">
-        <Button
-          styling="text-button"
-          clickFn={onClose}
-          btnText="Close"
-        />
+        <Button styling="text-button" clickFn={onClose} btnText="Close" />
       </div>
     </>
   );

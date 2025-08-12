@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { AppContext } from "../store/meal-cart-context.jsx";
 
-export default function OrderItem({ orderDetails }) {
-  const { addItem } = useContext(AppContext);
+export default function OrderItem({ orderDetails, onDelete }) {
+  const { addItem, user } = useContext(AppContext);
 
   function handleReorder() {
     const { items } = orderDetails;
@@ -14,20 +14,30 @@ export default function OrderItem({ orderDetails }) {
   return (
     <li className="order-item">
       <div>
-        <p>{orderDetails.customer.name}</p>
-        <p>Order {orderDetails.id}</p>
+        <p>
+          {user.firstname} {user.lastname}
+        </p>
+        <p>Order {orderDetails._id}</p>
         <p>Items:</p>
         <ul>
           {orderDetails.items.map((item) => (
             <li key={item.id}>
-              {item.name} x{item.quantity} - {item.price}
+              {item.name} x {item.quantity} - £{item.price}
             </li>
           ))}
         </ul>
       </div>
-      <button className="orange-button" onClick={handleReorder}>
-        Reorder
-      </button>
+      <div className="order-item-actions">
+        <button className="orange-button" onClick={handleReorder}>
+          Reorder
+        </button>
+        <button
+          className="red-button"
+          onClick={() => onDelete(orderDetails._id)}
+        >
+          Delete
+        </button>
+      </div>
     </li>
   );
 }

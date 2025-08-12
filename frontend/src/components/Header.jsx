@@ -11,6 +11,8 @@ export default function Header() {
   const { items, user } = useContext(AppContext);
   const modal = useRef();
 
+  console.log("user:", user)
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -31,7 +33,7 @@ export default function Header() {
   function showOrders() {
     modal.current.openOrders();
   }
-  
+
   function showLogout() {
     modal.current.openLogout();
   }
@@ -98,7 +100,7 @@ export default function Header() {
         }}
       >
         <Typography marginBottom={4} paddingInline={2}>
-          {user.username}
+          {user.firstname} {user.lastname}
         </Typography>
         <MenuItem
           onClick={() => {

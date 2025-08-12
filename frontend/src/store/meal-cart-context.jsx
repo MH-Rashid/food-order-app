@@ -1,10 +1,10 @@
 import { createContext, useReducer } from "react";
-import { fetchAvailableMeals } from "../http.js";
 
 export const AppContext = createContext({
   user: {
+    firstname: "",
+    lastname: "",
     username: "",
-    orders: "",
   },
   items: [],
   meals: [],
@@ -20,8 +20,9 @@ function AppReducer(state, action) {
     return {
       ...state,
       user: {
-        username: action.username,
-        orders: action.orders,
+        firstname: action.payload.firstname,
+        lastname: action.payload.lastname,
+        username: action.payload.username,
       },
     };
   }
@@ -105,32 +106,27 @@ function AppReducer(state, action) {
 export default function AppContextProvider({ children }) {
   const [initialState, dispatch] = useReducer(AppReducer, {
     user: {
+      firstname: "",
+      lastname: "",
       username: "",
-      orders: "",
     },
     meals: [],
     items: JSON.parse(localStorage.getItem("cart")) || [],
   });
 
-  function setUser(username, orders) {
+  function setUser(payload) {
     dispatch({
       type: "SET_USER",
-      username,
-      orders,
+      payload,
     });
   }
 
-  async function setMeals() {
-  try {
-    const meals = await fetchAvailableMeals();
+  function setMeals(payload) {
     dispatch({
       type: "SET_MEALS",
-      payload: meals,
+      payload,
     });
-  } catch (err) {
-    console.error("Failed to load meals");
   }
-}
 
   function addItem(item) {
     dispatch({

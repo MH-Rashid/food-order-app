@@ -1,12 +1,11 @@
 import { useContext, useState } from "react";
-
 import { AppContext } from "../../store/meal-cart-context.jsx";
 import ErrorMessage from "./ErrorMessage.jsx";
 import ErrorModal from "../ErrorModal.jsx";
 import Button from "../../UI/Button.jsx";
 import Input from "../../UI/Input.jsx";
-
-import { orders } from "../../App.jsx";
+import { toast } from "react-toastify";
+import { createOrder } from "../../http.js";
 
 export default function CheckoutForm({ onClose, onShowConf }) {
   const { items } = useContext(AppContext);
@@ -21,7 +20,7 @@ export default function CheckoutForm({ onClose, onShowConf }) {
   );
   const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const fd = new FormData(event.target);
@@ -51,14 +50,17 @@ export default function CheckoutForm({ onClose, onShowConf }) {
           ["postal-code"]: data.postcode,
           city: data.city,
         },
-        id: (Math.random() * 1000).toString(),
       };
-  
-      orders.push(order);
-      console.log(orders);
-      localStorage.setItem("orders", JSON.stringify(orders));
-      setIsSubmitting(false);
-      onShowConf();
+
+      try {
+        const result = await createOrder(order);
+        console.log("order:", result);
+        toast.success("Order has been placed");
+        setIsSubmitting(false);
+        onShowConf();
+      } catch (err) {
+        toast.error("An error occurred: " + (error?.message || "Unknown error"));
+      }
     }
   }
 

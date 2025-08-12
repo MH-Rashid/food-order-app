@@ -128,14 +128,21 @@ h1 {
 .order-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border: 1px solid orange;
   border-radius: 10px;
   padding: 0 15px 15px;
   margin-bottom: 10px;
 }
 
+.order-item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .order-item button {
-  align-self: center;
+  width: 7rem;
 }
 
 dialog {
@@ -384,6 +391,22 @@ dialog {
   border-radius: 4px;
   background-color: #ff3604;
   border: 1px solid #ff3604;
+}
+
+.red-button {
+  font: inherit;
+  cursor: pointer;
+  background-color: #ff3604;
+  border: 1px solid #ff3604;
+  color: #1f1a09;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+}
+
+.red-button:hover,
+.red-button:active {
+  background-color: #f66b48;
+  border-color: #f66b48;
 }
 
 .text-button {

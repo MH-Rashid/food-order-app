@@ -15,7 +15,6 @@ const handleLogin = async (req, res) => {
   // evaluate password
   const match = await bcrypt.compare(pwd, foundUser.password);
   if (match) {
-    // create JWTs
     const accessToken = jwt.sign(
       {
         UserInfo: {
@@ -23,7 +22,7 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "300s" } // 5 mins
+      { expiresIn: "10m" }
     );
 
     const refreshToken = jwt.sign(
@@ -34,8 +33,7 @@ const handleLogin = async (req, res) => {
 
     // Add refresh token to found user in DB
     foundUser.refreshToken = refreshToken;
-    const result = await foundUser.save();
-    console.log(result);
+    await foundUser.save();
 
     // Create secure cookie with refresh token
     res.cookie("jwt", refreshToken, {
@@ -43,12 +41,18 @@ const handleLogin = async (req, res) => {
       sameSite: "Strict",
       // secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      path: '/'
+      path: "/",
     });
-    res.json({ accessToken });
+    res.json({
+      accessToken,
+      user: {
+        firstname: foundUser.firstname,
+        lastname: foundUser.lastname,
+        username: foundUser.username,
+      },
+    });
 
     // Also save accessToken on client side, e.g. in localStorage or sessionStorage.
-
   } else {
     res.sendStatus(401);
   }
