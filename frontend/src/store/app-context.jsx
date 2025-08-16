@@ -1,19 +1,6 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useEffect } from "react";
 import { fetchAvailableMeals } from "../http.js";
 import { toast } from "react-toastify";
-
-const accessToken = localStorage.getItem("accessToken") || "";
-
-let fetchedMeals = [];
-
-if (accessToken) {
-  const response = await fetchAvailableMeals();
-  if (Array.isArray(response)) {
-    fetchedMeals = response;
-  } else {
-    toast.error(response.message || "Failed to fetch meals.");
-  }
-}
 
 export const AppContext = createContext({
   user: {
@@ -149,14 +136,16 @@ function AppReducer(state, action) {
 }
 
 export default function AppContextProvider({ children }) {
+  const accessToken = localStorage.getItem("accessToken") || "";
+  const userData = JSON.parse(localStorage.getItem("user")) || {};
   const [initialState, dispatch] = useReducer(AppReducer, {
     user: {
       accessToken: accessToken,
-      firstname: JSON.parse(localStorage.getItem("user"))?.firstname || "",
-      lastname: JSON.parse(localStorage.getItem("user"))?.lastname || "",
-      username: JSON.parse(localStorage.getItem("user"))?.username || "",
+      firstname: userData.firstname || "",
+      lastname: userData.lastname || "",
+      username: userData.username || "",
     },
-    meals: fetchedMeals,
+    meals: [],
     items: JSON.parse(localStorage.getItem("cart")) || [],
   });
 
@@ -201,6 +190,21 @@ export default function AppContextProvider({ children }) {
       type: "RESET_CART",
     });
   }
+
+  // Fetch meals after mount if accessToken exists
+  useEffect(() => {
+    async function fetchMeals() {
+      if (!accessToken) return;
+      const response = await fetchAvailableMeals();
+      if (Array.isArray(response)) {
+        setMeals(response);
+      } else {
+        toast.error(response.message || "Failed to fetch meals.");
+      }
+    }
+    
+    fetchMeals();
+  }, [accessToken]);
 
   const ctxValue = {
     user: initialState.user,
