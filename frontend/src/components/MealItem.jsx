@@ -1,7 +1,7 @@
+import '../styles/meals.css';
 import { useContext, useState } from "react";
-
-import { AppContext } from "../store/meal-cart-context";
-import Button from "../UI/Button";
+import { AppContext } from '../store/app-context.jsx';
+import Button from './Button.jsx';
 
 export default function MealItem({ meal }) {
   const { addItem } = useContext(AppContext);
@@ -28,7 +28,7 @@ export default function MealItem({ meal }) {
           <Button
             styling={isAdded ? "orange-button-clicked" : "orange-button"}
             clickFn={addMealItem}
-            btnText={isAdded ? "✔ Added" : "Add to Cart"}
+            btnText={isAdded ? "Added" : "Add to Cart"}
           />
         </p>
       </article>

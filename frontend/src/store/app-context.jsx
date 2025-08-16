@@ -1,7 +1,23 @@
 import { createContext, useReducer } from "react";
+import { fetchAvailableMeals } from "../http.js";
+import { toast } from "react-toastify";
+
+const accessToken = localStorage.getItem("accessToken") || "";
+
+let fetchedMeals = [];
+
+if (accessToken) {
+  const response = await fetchAvailableMeals();
+  if (Array.isArray(response)) {
+    fetchedMeals = response;
+  } else {
+    toast.error(response.message || "Failed to fetch meals.");
+  }
+}
 
 export const AppContext = createContext({
   user: {
+    accessToken: "",
     firstname: "",
     lastname: "",
     username: "",
@@ -11,6 +27,7 @@ export const AppContext = createContext({
   setMeals: () => {},
   setUser: () => {},
   addItem: () => {},
+  addItems: () => {},
   updateItem: () => {},
   resetCart: () => {},
 });
@@ -20,6 +37,7 @@ function AppReducer(state, action) {
     return {
       ...state,
       user: {
+        accessToken: action.payload.accessToken,
         firstname: action.payload.firstname,
         lastname: action.payload.lastname,
         username: action.payload.username,
@@ -56,6 +74,33 @@ function AppReducer(state, action) {
         quantity: 1,
       });
     }
+
+    localStorage.setItem("cart", JSON.stringify(updatedItems));
+
+    return {
+      ...state,
+      items: updatedItems,
+    };
+  }
+
+  if (action.type === "ADD_ITEMS") {
+    const updatedItems = [...state.items];
+
+    action.items.forEach((newItem) => {
+      const existingIndex = updatedItems.findIndex(
+        (item) => item.id === newItem.id
+      );
+
+      if (existingIndex !== -1) {
+        const existingItem = updatedItems[existingIndex];
+        updatedItems[existingIndex] = {
+          ...existingItem,
+          quantity: existingItem.quantity + newItem.quantity,
+        };
+      } else {
+        updatedItems.push({ ...newItem });
+      }
+    });
 
     localStorage.setItem("cart", JSON.stringify(updatedItems));
 
@@ -106,11 +151,12 @@ function AppReducer(state, action) {
 export default function AppContextProvider({ children }) {
   const [initialState, dispatch] = useReducer(AppReducer, {
     user: {
-      firstname: "",
-      lastname: "",
-      username: "",
+      accessToken: accessToken,
+      firstname: JSON.parse(localStorage.getItem("user"))?.firstname || "",
+      lastname: JSON.parse(localStorage.getItem("user"))?.lastname || "",
+      username: JSON.parse(localStorage.getItem("user"))?.username || "",
     },
-    meals: [],
+    meals: fetchedMeals,
     items: JSON.parse(localStorage.getItem("cart")) || [],
   });
 
@@ -135,6 +181,13 @@ export default function AppContextProvider({ children }) {
     });
   }
 
+  function addItems(items) {
+    dispatch({
+      type: "ADD_ITEMS",
+      items,
+    });
+  }
+
   function updateItem(id, amount) {
     dispatch({
       type: "UPDATE_ITEM",
@@ -156,6 +209,7 @@ export default function AppContextProvider({ children }) {
     setMeals,
     setUser,
     addItem,
+    addItems,
     updateItem,
     resetCart,
   };

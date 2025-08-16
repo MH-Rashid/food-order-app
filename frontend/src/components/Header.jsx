@@ -1,17 +1,21 @@
+import '../styles/header.css';
 import { useRef, useContext, useState } from "react";
 import logoImage from "/logo.jpg";
 import Modal from "./Modal";
-import Button from "../UI/Button";
-import { AppContext } from "../store/meal-cart-context";
+import Button from './Button.jsx';
+import { AppContext } from '../store/app-context.jsx';
 import { IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { AccountCircle, ArrowDropDown } from "@mui/icons-material";
+import {
+  AccountCircle,
+  ArrowDropDown,
+  ListAlt,
+  ShoppingCart,
+} from "@mui/icons-material";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const { items, user } = useContext(AppContext);
   const modal = useRef();
-
-  console.log("user:", user)
 
   const open = Boolean(anchorEl);
 
@@ -45,36 +49,50 @@ export default function Header() {
         <img src={logoImage} />
         <h1>Food order</h1>
       </div>
-      <div className="modal-actions">
-        <Button
-          styling="main-header-button"
-          clickFn={showOrders}
-          btnText="Orders"
-        />
-        <Button
-          styling="main-header-button"
-          clickFn={showCart}
-          btnText={`Cart (${cartQuantity})`}
-        />
-        <IconButton
-          id="basic-button"
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-          size="medium"
-          sx={{
-            backgroundColor: "#ffc404",
-            borderRadius: "50px",
-            ":hover": { backgroundColor: "#fdd34aff" },
-          }}
-        >
-          <Stack direction="row" alignItems="center">
-            <AccountCircle sx={{ fontSize: 24 }} />
-            <ArrowDropDown />
-          </Stack>
-        </IconButton>
-      </div>
+      {user.accessToken && (
+        <div className="modal-actions">
+          <Button
+            styling="main-header-button orders-button"
+            clickFn={showOrders}
+            btnText="Orders"
+          />
+          <Button
+            styling="main-header-button cart-button"
+            clickFn={showCart}
+            btnText={`Cart (${cartQuantity})`}
+          />
+
+          <IconButton onClick={showOrders} className="orders-icon">
+            <ListAlt sx={{ color: "#ffc404", fontSize: 30 }} />
+          </IconButton>
+          <IconButton onClick={showCart} className="cart-icon">
+            <div className="cart-wrapper">
+              <ShoppingCart sx={{ color: "#ffc404", fontSize: 30 }} />
+              <span className="cart-badge">{cartQuantity}</span>
+            </div>
+          </IconButton>
+
+          <IconButton
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            size="medium"
+            sx={{
+              backgroundColor: "#ffc404",
+              borderRadius: "50px",
+              ":hover": { backgroundColor: "#fdd34aff" },
+              marginLeft: 1
+            }}
+          >
+            <Stack direction="row" alignItems="center">
+              <AccountCircle sx={{ fontSize: 20, color: "black" }} />
+              <ArrowDropDown className="avatar-dropdown-icon" />
+            </Stack>
+          </IconButton>
+        </div>
+      )}
+
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

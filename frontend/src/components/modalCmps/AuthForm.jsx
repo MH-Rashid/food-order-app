@@ -1,7 +1,8 @@
+import '../../styles/authForm.css';
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { AppContext } from "../../store/meal-cart-context.jsx";
-import { fetchAvailableMeals } from "../../http.js";
+import { AppContext } from "../../store/app-context.jsx";
+import { fetchAvailableMeals, login, registerUser } from "../../http.js";
 
 export default function AuthForm({ onClose }) {
   const [formType, setFormType] = useState("login");
@@ -56,83 +57,58 @@ export default function AuthForm({ onClose }) {
       );
     }
 
-    return false
+    return false;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     if (formType === "login") {
       event.preventDefault();
 
-      fetch("http://localhost:3100/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          user: formData.email,
-          pwd: formData.password,
-        }),
-      })
-        .then((response) => response.json())
-        .then(async (data) => {
-          if (data.accessToken) {
-            localStorage.setItem("accessToken", data.accessToken);
-            toast.success(`Login successful. Welcome ${data.user.firstname}!`);
-            setUser({
-              firstname: data.user.firstname,
-              lastname: data.user.lastname,
-              username: data.user.username,
-            });
-            const response = await fetchAvailableMeals();
-            if (Array.isArray(response)) {
-              setMeals(response);
-              onClose();
-            } else {
-              toast.error(response.message || "Failed to fetch meals.");
-            }
-          } else {
-            toast.error("Login failed: " + (data.message || "Unknown error"));
-          }
-        })
-        .catch((error) => {
-          console.error(error)
-          toast.error(
-            "An error occurred: " + (error.message || "Unknown error")
-          );
+      const userData = {
+        user: formData.email,
+        pwd: formData.password,
+      };
+
+      const result = await login(userData);
+      if (result.accessToken) {
+        localStorage.setItem("accessToken", result.accessToken);
+        localStorage.setItem("user", JSON.stringify(result.user));
+        toast.success(`Login successful. Welcome, ${result.user.firstname}`);
+        setUser({
+          accessToken: result.accessToken,
+          firstname: result.user.firstname,
+          lastname: result.user.lastname,
+          username: result.user.username,
         });
+        const response = await fetchAvailableMeals();
+        if (Array.isArray(response)) {
+          setMeals(response);
+          onClose();
+        } else {
+          toast.error(response.message || "Failed to fetch meals.");
+        }
+      } else {
+        toast.error("Login failed: " + (result.message || "Unknown error"));
+      }
     } else {
       event.preventDefault();
-      console.log("Registering with:", formData);
+      const userData = {
+        first: formData.firstname,
+        last: formData.lastname,
+        user: formData.email,
+        pwd: formData.password,
+      };
 
-      fetch("http://localhost:3100/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          first: formData.firstname,
-          last: formData.lastname,
-          user: formData.email,
-          pwd: formData.password,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            toast.success("Registration successful. Please log in.");
-            setFormType("login");
-          } else {
-            toast.error(
-              "Registration failed: " + (data.message || "Unknown error")
-            );
-          }
-        })
-        .catch((error) => {
-          toast.error(
-            "An error occurred: " + (error.message || "Unknown error")
-          );
-        });
+      const result = await registerUser(userData);
+
+      if (result.success) {
+        toast.success("Registration successful. Please log in.");
+        setFormType("login");
+      } else {
+        toast.error(
+          "Registration failed: " + (result.message || "Unknown error")
+        );
+      }
     }
   };
 
@@ -144,7 +120,7 @@ export default function AuthForm({ onClose }) {
 
       {formType === "register" && (
         <>
-          <div className="form-group">
+          <div className="auth-form-group">
             <label htmlFor="firstname">First Name</label>
             <input
               type="text"
@@ -157,7 +133,7 @@ export default function AuthForm({ onClose }) {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="auth-form-group">
             <label htmlFor="lastname">Last Name</label>
             <input
               type="text"
@@ -173,7 +149,7 @@ export default function AuthForm({ onClose }) {
         </>
       )}
 
-      <div className="form-group">
+      <div className="auth-form-group">
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -186,7 +162,7 @@ export default function AuthForm({ onClose }) {
           required
         />
       </div>
-      <div className="form-group">
+      <div className="auth-form-group">
         <label htmlFor="password">Password</label>
         <input
           type="password"
@@ -201,7 +177,7 @@ export default function AuthForm({ onClose }) {
       </div>
 
       {formType === "register" && (
-        <div className="form-group">
+        <div className="auth-form-group">
           <label htmlFor="confirmPassword">Confirm password</label>
           <input
             type="password"
@@ -216,11 +192,7 @@ export default function AuthForm({ onClose }) {
         </div>
       )}
 
-      <button
-        type="submit"
-        className="auth-btn"
-        disabled={isDisabled()}
-      >
+      <button type="submit" className="auth-btn" disabled={isDisabled()}>
         {formType === "login" ? "Login" : "Register"}
       </button>
 

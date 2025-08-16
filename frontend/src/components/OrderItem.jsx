@@ -1,24 +1,28 @@
+import '../styles/orders.css';
 import { useContext } from "react";
-import { AppContext } from "../store/meal-cart-context.jsx";
+import { AppContext } from "../store/app-context.jsx";
+import { toast } from "react-toastify";
 
 export default function OrderItem({ orderDetails, onDelete }) {
-  const { addItem, user } = useContext(AppContext);
+  const { addItems } = useContext(AppContext);
 
   function handleReorder() {
-    const { items } = orderDetails;
-    items.forEach((item) => {
-      addItem(item);
-    });
+    addItems(orderDetails.items);
+    toast.success("Items added to cart successfully!");
   }
+
+  const { items } = orderDetails;
+  const totalPrice = items.reduce(
+    (accumulator, item) => accumulator + item.price * item.quantity,
+    0
+  );
 
   return (
     <li className="order-item">
       <div>
-        <p>
-          {user.firstname} {user.lastname}
+        <p style={{ marginTop: "3px" }}>
+          Order {orderDetails._id}
         </p>
-        <p>Order {orderDetails._id}</p>
-        <p>Items:</p>
         <ul>
           {orderDetails.items.map((item) => (
             <li key={item.id}>
@@ -26,6 +30,7 @@ export default function OrderItem({ orderDetails, onDelete }) {
             </li>
           ))}
         </ul>
+        <p style={{ fontWeight: "bold", marginBottom: "0" }}>Total: £{totalPrice}</p>
       </div>
       <div className="order-item-actions">
         <button className="orange-button" onClick={handleReorder}>

@@ -1,7 +1,7 @@
+import '../../styles/cart.css';
 import { useContext } from "react";
-
-import { AppContext } from "../../store/meal-cart-context";
-import Button from "../../UI/Button";
+import { AppContext } from "../../store/app-context";
+import Button from "../Button";
 
 export default function Cart({ onCheckout }) {
   const { items, updateItem, resetCart } = useContext(AppContext);

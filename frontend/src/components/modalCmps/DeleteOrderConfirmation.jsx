@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import Button from "../../UI/Button.jsx";
+import Button from "../Button.jsx";
 import { deleteOrder } from "../../http.js";
 
 export default function DeleteOrderConfirmation({
@@ -27,7 +27,7 @@ export default function DeleteOrderConfirmation({
       <h2 style={{ textAlign: "center" }}>
         Are you sure you want to delete this order?
       </h2>
-      <div className="logout-modal-actions">
+      <div className="confirmation-modal-actions">
         <Button styling="text-button" clickFn={onCancel} btnText="Cancel" />
         <Button styling="orange-button" clickFn={handleDelete} btnText="Yes" />
       </div>

@@ -1,6 +1,4 @@
 async function tryRefreshToken() {
-  console.log("Attempting to refresh token...");
-  
   try {
     const res = await fetch("http://localhost:3100/api/refresh", {
       method: "GET",
@@ -14,6 +12,47 @@ async function tryRefreshToken() {
     console.error("Refresh error:", err);
     return null;
   }
+}
+
+export async function registerUser(userData) {
+  const response = await fetch("http://localhost:3100/api/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+    credentials: "include",
+  });
+
+  const data = await response.json();
+  return data;
+}
+
+export async function login(userData) {
+  const response = await fetch("http://localhost:3100/api/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+    credentials: "include",
+  });
+
+  const data = await response.json();
+  return data;
+}
+
+export async function logout() {
+  const response = await fetch("http://localhost:3100/api/logout", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  const data = await response.json();
+  return data;
 }
 
 export async function fetchAvailableMeals() {

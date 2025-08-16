@@ -1,0 +1,28 @@
+#orders {
+  list-style-type: none;
+  padding: 0;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 3px solid orange;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.order-item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-item button {
+  width: 7rem;
+}
+
+.order-item h4 {
+  margin: 0;
+}

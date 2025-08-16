@@ -1,6 +1,8 @@
+import '../styles/modal.css'
 import {
   forwardRef,
   useContext,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -13,184 +15,127 @@ import Orders from "./modalCmps/Orders.jsx";
 import AuthForm from "./modalCmps/AuthForm.jsx";
 import LogoutConfirmation from "./modalCmps/LogoutConfirmation.jsx";
 import DeleteOrderConfirmation from "./modalCmps/DeleteOrderConfirmation.jsx";
-import { AppContext } from "../store/meal-cart-context.jsx";
+import { AppContext } from "../store/app-context.jsx";
+
+const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
 
 const Modal = forwardRef(function Modal(props, ref) {
-  const { setMeals, setUser, user } = useContext(AppContext);
-
-  console.log("user:", user);
-
-  const [modalState, setModalState] = useState({
-    showAuth: true,
-    showLogout: undefined,
-    showDeleteOrder: undefined,
-    showCart: undefined,
-    showOrders: undefined,
-    showForm: undefined,
-    showConf: undefined,
-  });
+  const { setMeals, setUser } = useContext(AppContext);
+  const [showModal, setShowModal] = useState(true);
+  const [activeModal, setActiveModal] = useState("auth");
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const dialog = useRef(null);
 
-  const dialog = useRef();
+  useEffect(() => {
+    if (showModal) {
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    }
 
-  useImperativeHandle(ref, () => {
-    return {
-      openCart() {
-        dialog.current.showModal();
-        setModalState({
-          showAuth: false,
-          showLogout: false,
-          showDeleteOrder: false,
-          showCart: true,
-          showOrders: false,
-          showForm: false,
-          showConf: false,
-        });
-      },
-      openOrders() {
-        dialog.current.showModal();
-        setModalState({
-          showAuth: false,
-          showLogout: false,
-          showDeleteOrder: false,
-          showCart: false,
-          showOrders: true,
-          showForm: false,
-          showConf: false,
-        });
-      },
-      openLogout() {
-        dialog.current.showModal();
-        setModalState({
-          showAuth: false,
-          showLogout: true,
-          showDeleteOrder: false,
-          showCart: false,
-          showOrders: false,
-          showForm: false,
-          showConf: false,
-        });
-      },
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
     };
-  });
+  }, [showModal]); // prevent background scroll and shifting when modal active
 
-  function handleLogout() {
-    setUser({});
-    setMeals([]);
-    setModalState({
-      showAuth: true,
-      showLogout: false,
-      showDeleteOrder: false,
-      showCart: false,
-      showOrders: false,
-      showForm: false,
-      showConf: false,
-    });
-  }
+  useEffect(() => {
+    if (isLoggedIn) handleCloseModal();
+  }, []);
 
-  function handleCheckOut() {
-    setModalState({
-      showAuth: false,
-      showLogout: false,
-      showDeleteOrder: false,
-      showCart: false,
-      showOrders: false,
-      showForm: true,
-      showConf: false,
-    });
-  }
-
-  function handleShowConf() {
-    setModalState({
-      showAuth: false,
-      showLogout: false,
-      showDeleteOrder: false,
-      showCart: false,
-      showOrders: false,
-      showForm: false,
-      showConf: true,
-    });
-  }
-
-  function handleCancelDeleteOrder() {
-    setModalState({
-      showAuth: false,
-      showLogout: false,
-      showDeleteOrder: false,
-      showCart: false,
-      showOrders: true,
-      showForm: false,
-      showConf: false,
-    });
-  }
-
-  function handleShowDeleteOrder(orderId) {
-    setModalState({
-      showAuth: false,
-      showLogout: false,
-      showDeleteOrder: true,
-      showCart: false,
-      showOrders: false,
-      showForm: false,
-      showConf: false,
-    });
-    setSelectedOrderId(orderId);
-  }
+  useImperativeHandle(ref, () => ({
+    openCart() {
+      dialog.current?.showModal();
+      setShowModal(true);
+      setActiveModal("cart");
+    },
+    openOrders() {
+      dialog.current?.showModal();
+      setShowModal(true);
+      setActiveModal("orders");
+    },
+    openLogout() {
+      dialog.current?.showModal();
+      setShowModal(true);
+      setActiveModal("logout");
+    },
+  }));
 
   function handleCloseModal() {
-    dialog.current.close();
+    if (dialog.current?.open) {
+      dialog.current.close();
+    }
+    setShowModal(false);
+    setActiveModal(null);
   }
 
-  let modalContent;
+  const handleLogout = () => {
+    setUser({});
+    setMeals([]);
+    setActiveModal("auth");
+  };
 
-  if (modalState.showAuth) {
-    modalContent = <AuthForm onClose={handleCloseModal} />;
-  } else if (modalState.showLogout) {
-    modalContent = (
+  const handleShowDeleteOrder = (orderId) => {
+    setSelectedOrderId(orderId);
+    setActiveModal("deleteOrder");
+  };
+
+  const modalMap = {
+    auth: <AuthForm onClose={handleCloseModal} />,
+    logout: (
       <LogoutConfirmation onClose={handleCloseModal} onLogout={handleLogout} />
-    );
-  } else if (modalState.showForm) {
-    modalContent = (
-      <CheckoutForm onClose={handleCloseModal} onShowConf={handleShowConf} />
-    );
-  } else if (modalState.showCart) {
-    modalContent = <Cart onCheckout={handleCheckOut} />;
-  } else if (modalState.showConf) {
-    modalContent = <OrderConfirmation onConfirm={handleCloseModal} />;
-  } else if (modalState.showOrders) {
-    modalContent = (
+    ),
+    form: (
+      <CheckoutForm
+        onClose={handleCloseModal}
+        onShowConf={() => setActiveModal("conf")}
+        onShowCart={() => setActiveModal("cart")}
+      />
+    ),
+    cart: <Cart onCheckout={() => setActiveModal("form")} />,
+    conf: <OrderConfirmation onConfirm={handleCloseModal} />,
+    orders: (
       <Orders
-        key={Date.now()} // key prop forces re-mounting hence refetching of orders data
+        isActive={activeModal === "orders"}
         onClose={handleCloseModal}
         onDelete={handleShowDeleteOrder}
       />
-    );
-  } else if (modalState.showDeleteOrder) {
-    modalContent = (
+    ),
+    deleteOrder: (
       <DeleteOrderConfirmation
-        onCancel={handleCancelDeleteOrder}
+        onCancel={() => setActiveModal("orders")}
         onClose={handleCloseModal}
         orderId={selectedOrderId}
       />
-    );
-  }
+    ),
+  };
 
-  return createPortal(
-    <>
+  const modalContent = modalMap[activeModal];
+
+  return (
+    showModal &&
+    createPortal(
       <div
         className="modal-overlay"
-        onClick={!modalState.showAuth ? handleCloseModal : null}
-      />
-      <dialog
-        ref={dialog}
-        onClose={handleCloseModal}
-        open
-        className="modal-dialog"
+        onClick={(e) => {
+          if (
+            activeModal !== "auth" &&
+            e.target.classList.contains("modal-overlay")
+          ) {
+            handleCloseModal();
+          }
+        }}
       >
-        <div className="modal">{modalContent}</div>
-      </dialog>
-    </>,
-    document.getElementById("modal")
+        <dialog ref={dialog} onClose={handleCloseModal} open>
+          <div className="modal">{modalContent}</div>
+        </dialog>
+      </div>,
+      document.getElementById("modal")
+    )
   );
 });
 

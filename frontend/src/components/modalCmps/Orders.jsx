@@ -1,14 +1,17 @@
+import '../../styles/orders.css';
 import { useEffect, useState } from "react";
 import { fetchOrders } from "../../http.js";
-import Button from "../../UI/Button.jsx";
+import Button from '../Button.jsx';
 import { toast } from "react-toastify";
 import OrderItem from "../OrderItem.jsx";
 
-export default function Orders({ onClose, onDelete }) {
+export default function Orders({ onClose, onDelete, isActive }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isActive) return;
+    setLoading(true);
     async function loadOrders() {
       try {
         const data = await fetchOrders();
@@ -26,7 +29,7 @@ export default function Orders({ onClose, onDelete }) {
     }
 
     loadOrders();
-  }, []);
+  }, [isActive]);
 
   if (loading) {
     return <p>Loading orders...</p>;

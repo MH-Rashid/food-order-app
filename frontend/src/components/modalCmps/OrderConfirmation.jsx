@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
-import { AppContext } from "../../store/meal-cart-context";
-import Button from "../../UI/Button";
+import { AppContext } from "../../store/app-context";
+import Button from "../Button";
 
 export default function OrderConfirmation({ onConfirm }) {
   const { resetCart } = useContext(AppContext);
@@ -16,8 +16,7 @@ export default function OrderConfirmation({ onConfirm }) {
       <h2>Success!</h2>
       <p>Your order was submitted successfully.</p>
       <p>
-        We will get back to you with more details via email within the next few
-        minutes.
+        We will keep you updated on the status of your order via email.
       </p>
       <div className="modal-actions">
         <Button
