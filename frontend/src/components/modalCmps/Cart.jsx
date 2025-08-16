@@ -1,4 +1,4 @@
-import '../../styles/cart.css';
+import "../../styles/cart.css";
 import { useContext } from "react";
 import { AppContext } from "../../store/app-context";
 import Button from "../Button";
@@ -6,13 +6,16 @@ import Button from "../Button";
 export default function Cart({ onCheckout }) {
   const { items, updateItem, resetCart } = useContext(AppContext);
 
-  const totalPrice = items.reduce(
-    (accumulator, item) => accumulator + item.price * item.quantity,
-    0
-  );
+  const totalPrice = Array.isArray(items)
+    ? items?.reduce(
+        (accumulator, item) => accumulator + item.price * item.quantity,
+        0
+      )
+    : 0;
+
   const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
 
-  const cartQuantity = items.length;
+  const cartQuantity = items?.length;
 
   return (
     <div className="cart">
