@@ -1,4 +1,4 @@
-const baseURL = import.meta.env.VITE_API_URL;
+const baseURL = import.meta.env.VITE_API_URL || "https://p01--food-order-backend--q8t5sy6km7sl.code.run";
 
 async function tryRefreshToken() {
   try {
