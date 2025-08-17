@@ -1,6 +1,8 @@
+const baseURL = import.meta.env.VITE_API_URL;
+
 async function tryRefreshToken() {
   try {
-    const res = await fetch("http://localhost:3100/api/refresh", {
+    const res = await fetch(`${baseURL}/api/refresh`, {
       method: "GET",
       credentials: "include",
     });
@@ -15,7 +17,7 @@ async function tryRefreshToken() {
 }
 
 export async function registerUser(userData) {
-  const response = await fetch("http://localhost:3100/api/register", {
+  const response = await fetch(`${baseURL}/api/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,7 +31,7 @@ export async function registerUser(userData) {
 }
 
 export async function login(userData) {
-  const response = await fetch("http://localhost:3100/api/login", {
+  const response = await fetch(`${baseURL}/api/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -43,7 +45,7 @@ export async function login(userData) {
 }
 
 export async function logout() {
-  const response = await fetch("http://localhost:3100/api/logout", {
+  const response = await fetch(`${baseURL}/api/logout`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -57,7 +59,7 @@ export async function logout() {
 
 export async function fetchAvailableMeals() {
   const accessToken = localStorage.getItem("accessToken");
-  const response = await fetch("http://localhost:3100/api/meals", {
+  const response = await fetch(`${baseURL}/api/meals`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -70,7 +72,7 @@ export async function fetchAvailableMeals() {
     const newAccessToken = await tryRefreshToken();
     if (newAccessToken) {
       // Retry the original request with the new access token
-      const retryResponse = await fetch("http://localhost:3100/api/meals", {
+      const retryResponse = await fetch(`${baseURL}/api/meals`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +92,7 @@ export async function fetchAvailableMeals() {
 
 export async function fetchOrders() {
   const accessToken = localStorage.getItem("accessToken");
-  const response = await fetch("http://localhost:3100/api/orders", {
+  const response = await fetch(`${baseURL}/api/orders`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +105,7 @@ export async function fetchOrders() {
     const newAccessToken = await tryRefreshToken();
     if (newAccessToken) {
       // Retry the original request with the new access token
-      const retryResponse = await fetch("http://localhost:3100/api/orders", {
+      const retryResponse = await fetch(`${baseURL}/api/orders`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +125,7 @@ export async function fetchOrders() {
 
 export async function createOrder(orderData) {
   const accessToken = localStorage.getItem("accessToken");
-  const response = await fetch("http://localhost:3100/api/orders", {
+  const response = await fetch(`${baseURL}/api/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -137,7 +139,7 @@ export async function createOrder(orderData) {
     const newAccessToken = await tryRefreshToken();
     if (newAccessToken) {
       // Retry the original request with the new access token
-      const retryResponse = await fetch("http://localhost:3100/api/orders", {
+      const retryResponse = await fetch(`${baseURL}/api/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -158,7 +160,7 @@ export async function createOrder(orderData) {
 
 export async function deleteOrder(orderId) {
   const accessToken = localStorage.getItem("accessToken");
-  const response = await fetch("http://localhost:3100/api/orders", {
+  const response = await fetch(`${baseURL}/api/orders`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -174,7 +176,7 @@ export async function deleteOrder(orderId) {
     const newAccessToken = await tryRefreshToken();
     if (newAccessToken) {
       // Retry the original request with the new access token
-      const retryResponse = await fetch("http://localhost:3100/api/orders", {
+      const retryResponse = await fetch(`${baseURL}/api/orders`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
