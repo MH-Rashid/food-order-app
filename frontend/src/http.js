@@ -1,5 +1,7 @@
 const baseURL = import.meta.env.VITE_API_URL || "https://p01--food-order-backend--q8t5sy6km7sl.code.run";
 
+console.log("baseURL:", import.meta.env.VITE_API_URL)
+
 async function tryRefreshToken() {
   try {
     const res = await fetch(`${baseURL}/api/refresh`, {
