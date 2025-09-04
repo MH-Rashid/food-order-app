@@ -16,6 +16,7 @@ dialog {
   display: flex;
   flex-direction: column;
   animation: fade-slide-up 0.3s ease-out forwards;
+  margin: auto;
 }
 
 .modal-overlay {

@@ -124,7 +124,7 @@ body {
 /* Mobile: ≤ 600px */
 @media (max-width: 650px) {
   .modal {
-    width: 100vw;
+    width: calc(100vw - 2rem);
     max-width: 450px;
     padding: 1rem;
   }
